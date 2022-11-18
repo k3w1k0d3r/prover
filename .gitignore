@@ -1,0 +1,7 @@
+build/*
+!build/bin
+!build/lib
+build/bin/*
+build/lib/*
+!build/bin/.gitkeep
+!build/lib/.gitkeep
