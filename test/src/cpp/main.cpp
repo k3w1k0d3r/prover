@@ -24,14 +24,14 @@ int main() {
                     n,
                     Formula(
                         EQUIVALENT,
-                        Formula(Term(m), Term(n)),
-                        Formula(Term(S, {Term(m)}), Term(S, {Term(n)}))
+                        Formula(m, n),
+                        Formula(Term(S, {m}), Term(S, {n}))
                         )
                     )
                 )
             );
-    axioms.push_back(Formula(Formula(FORALL, m, Formula(Formula(Term(S, {Term(m)}), zero), 0))));
-    axioms.push_back(Formula(FORALL, m, Formula(Term(add, {Term(m), zero}), Term(m))));
+    axioms.push_back(Formula(Formula(FORALL, m, Formula(Formula(Term(S, {m}), zero), 0))));
+    axioms.push_back(Formula(FORALL, m, Formula(Term(add, {m, zero}), m)));
     axioms.push_back(Formula(
                 FORALL,
                 m,
@@ -39,13 +39,13 @@ int main() {
                     FORALL,
                     n,
                     Formula(
-                        Term(add, {m, Term(S, {Term(n)})}),
-                        Term(S, {Term(add, {Term(m), Term(n)})})
+                        Term(add, {m, Term(S, {n})}),
+                        Term(S, {Term(add, {m, n})})
                         )
                     )
                 )
             );
-    axioms.push_back(Formula(FORALL, m, Formula(Term(mult, {Term(m), zero}), zero)));
+    axioms.push_back(Formula(FORALL, m, Formula(Term(mult, {m, zero}), zero)));
     axioms.push_back(Formula(
                 FORALL,
                 m,
@@ -53,8 +53,8 @@ int main() {
                     FORALL,
                     n,
                     Formula(
-                        Term(mult, {Term(m), Term(S, {Term(n)})}),
-                        Term(add, {Term(m), Term(mult, {Term(m), Term(n)})})
+                        Term(mult, {m, Term(S, {n})}),
+                        Term(add, {m, Term(mult, {m, n})})
                         )
                     )
                 )
@@ -71,7 +71,7 @@ int main() {
                 Formula(
                     EXISTS,
                     m,
-                    Formula(AND, Formula(Term(m), zero), Formula(D, {}))
+                    Formula(AND, Formula(m, zero), Formula(D, {}))
                     ),
                 Formula(
                     FORALL,
@@ -84,11 +84,11 @@ int main() {
                             n,
                             Formula(
                                 AND,
-                                Formula(Term(n), Term(S, {m})),
+                                Formula(n, Term(S, {m})),
                                 Formula(
                                     EXISTS,
                                     m,
-                                    Formula(AND, Formula(Term(m), Term(n)), Formula(D, {}))
+                                    Formula(AND, Formula(m, n), Formula(D, {}))
                                     )
                                 )
                             )
@@ -127,8 +127,8 @@ int main() {
     proof.universal(8, {}, m);
     std::cout << "proven:" << std::endl;
     std::cout << proof.get_truths()[{}][proof.get_truths()[{}].size()-1].get_latex() << std::endl;
-    proof.identity(Term(add, {Term(b), zero}));
-    proof.universal(5, {}, Term(add, {Term(a), Term(b)}));
+    proof.identity(Term(add, {b, zero}));
+    proof.universal(5, {}, Term(add, {a, b}));
     proof.universal(5, {}, Term(b));
     proof.identity(12, 10, {}, {}, {1});
     proof.identity(13, 11, {}, {}, {1, 0});
@@ -140,8 +140,8 @@ int main() {
                     FORALL,
                     b,
                     Formula(
-                        Term(add, {Term(add, {Term(a), Term(b)}), Term(m)}),
-                        Term(add, {Term(a), Term(add, {Term(b), Term(m)})})
+                        Term(add, {Term(add, {a, b}), m}),
+                        Term(add, {a, Term(add, {b, m})})
                         )
                     )
                 )
@@ -150,20 +150,20 @@ int main() {
     proof.axiom(axioms[3], signature);
     proof.universal(0, {1}, Term(a));
     proof.universal(1, {1}, Term(b));
-    proof.universal(15, {}, Term(add, {Term(a), Term(b)}));
+    proof.universal(15, {}, Term(add, {a, b}));
     proof.universal(16, {}, Term(m));
     proof.identity(2, 17, {1}, {}, {1});
     proof.universal(15, {}, Term(a));
-    proof.universal(18, {}, Term(add, {Term(b), Term(m)}));
-    proof.identity(Term(add, {Term(a), Term(S, {Term(add, {Term(b), Term(m)})})}));
+    proof.universal(18, {}, Term(add, {b, m}));
+    proof.identity(Term(add, {a, Term(S, {Term(add, {b, m})})}));
     proof.identity(19, 20, {}, {}, {1});
     proof.identity(21, 3, {}, {1}, {1});
     proof.universal(15, {}, Term(b));
     proof.universal(22, {}, Term(m));
-    proof.identity(Term(add, {Term(b), Term(S, {Term(m)})}));
+    proof.identity(Term(add, {b, Term(S, {m})}));
     proof.identity(23, 24, {}, {}, {1});
     proof.identity(25, 4, {}, {1}, {1});
-    proof.identity(Term(S, {Term(m)}));
+    proof.identity(Term(S, {m}));
     proof.universal(5, {1}, b);
     proof.universal(6, {1}, a);
     proof.conjunction(26, 7, {}, {1});
@@ -175,7 +175,7 @@ int main() {
                 k,
                 Formula(
                     AND,
-                    Formula(Term(k), Term(S, {Term(m)})),
+                    Formula(k, Term(S, {m})),
                     Formula(
                         FORALL,
                         a,
@@ -183,14 +183,14 @@ int main() {
                             FORALL,
                             b,
                             Formula(
-                                Term(add, {Term(add, {Term(a), Term(b)}), Term(k)}),
-                                Term(add, {Term(a), Term(add, {Term(b), Term(k)})})
+                                Term(add, {Term(add, {a, b}), k}),
+                                Term(add, {a, Term(add, {b, k})})
                                 )
                             )
                         )
                     )
                 ),
-            Term(S, {Term(m)})
+            Term(S, {m})
             );
     proof.conjunction(26, 9, {}, {1});
     proof.existential(
@@ -201,13 +201,13 @@ int main() {
                 n,
                 Formula(
                     AND,
-                    Formula(Term(n), Term(S, {Term(m)})),
+                    Formula(n, Term(S, {m})),
                     Formula(
                         EXISTS,
                         k,
                         Formula(
                             AND,
-                            Formula(Term(k), Term(n)),
+                            Formula(k, n),
                             Formula(
                                 FORALL,
                                 a,
@@ -215,8 +215,8 @@ int main() {
                                     FORALL,
                                     b,
                                     Formula(
-                                        Term(add, {Term(add, {Term(a), Term(b)}), Term(k)}),
-                                        Term(add, {Term(a), Term(add, {Term(b), Term(k)})})
+                                        Term(add, {Term(add, {a, b}), k}),
+                                        Term(add, {a, Term(add, {b, k})})
                                         )
                                     )
                                 )
@@ -224,18 +224,18 @@ int main() {
                         )
                     )
                 ),
-            Term(S, {Term(m)})
+            Term(S, {m})
             );
     proof.hypothesis(
             Formula(
                 AND,
-                Formula(Term(n), Term(S, {Term(m)})),
+                Formula(n, Term(S, {m})),
                 Formula(
                     EXISTS,
                     k,
                     Formula(
                         AND,
-                        Formula(Term(k), Term(n)),
+                        Formula(k, n),
                         Formula(
                             FORALL,
                             a,
@@ -243,8 +243,8 @@ int main() {
                                 FORALL,
                                 b,
                                 Formula(
-                                    Term(add, {Term(add, {Term(a), Term(b)}), Term(k)}),
-                                    Term(add, {Term(a), Term(add, {Term(b), Term(k)})})
+                                    Term(add, {Term(add, {a, b}), k}),
+                                    Term(add, {a, Term(add, {b, k})})
                                     )
                                 )
                             )
@@ -256,7 +256,7 @@ int main() {
     proof.hypothesis(
             Formula(
                 AND,
-                Formula(Term(k), Term(n)),
+                Formula(k, n),
                 Formula(
                     FORALL,
                     a,
@@ -264,8 +264,8 @@ int main() {
                         FORALL,
                         b,
                         Formula(
-                            Term(add, {Term(add, {Term(a), Term(b)}), Term(k)}),
-                            Term(add, {Term(a), Term(add, {Term(b), Term(k)})})
+                            Term(add, {Term(add, {a, b}), k}),
+                            Term(add, {a, Term(add, {b, k})})
                             )
                         )
                     )
@@ -279,7 +279,7 @@ int main() {
                 m,
                 Formula(
                     AND,
-                    Formula(Term(m), Term(n)),
+                    Formula(m, n),
                     Formula(
                         FORALL,
                         a,
@@ -287,14 +287,14 @@ int main() {
                             FORALL,
                             b,
                             Formula(
-                                Term(add, {Term(add, {Term(a), Term(b)}), Term(m)}),
-                                Term(add, {Term(a), Term(add, {Term(b), Term(m)})})
+                                Term(add, {Term(add, {a, b}), m}),
+                                Term(add, {a, Term(add, {b, m})})
                                 )
                             )
                         )
                     )
                 ),
-            Term(k)
+            k
             );
     proof.cancel_hypothesis(1, 2, {0, 0, 1});
     proof.existential(2, 27, {0, 1}, {});
@@ -307,13 +307,13 @@ int main() {
                 n,
                 Formula(
                     AND,
-                    Formula(Term(n), Term(S, {Term(m)})),
+                    Formula(n, Term(S, {m})),
                     Formula(
                         EXISTS,
                         m,
                         Formula(
                             AND,
-                            Formula(Term(m), Term(n)),
+                            Formula(m, n),
                             Formula(
                                 FORALL,
                                 a,
@@ -321,8 +321,8 @@ int main() {
                                     FORALL,
                                     b,
                                     Formula(
-                                        Term(add, {Term(add, {Term(a), Term(b)}), Term(m)}),
-                                        Term(add, {Term(a), Term(add, {Term(b), Term(m)})})
+                                        Term(add, {Term(add, {a, b}), m}),
+                                        Term(add, {a, Term(add, {b, m})})
                                         )
                                     )
                                 )
@@ -330,7 +330,7 @@ int main() {
                         )
                     )
                 ),
-            Term(n)
+            n
             );
     proof.cancel_hypothesis(5, 1, {0, 1});
     proof.existential(11, 28, {1}, {});
@@ -348,7 +348,7 @@ int main() {
                 m,
                 Formula(
                     AND,
-                    Formula(Term(m), zero),
+                    Formula(m, zero),
                     Formula(
                         FORALL,
                         a,
@@ -356,8 +356,8 @@ int main() {
                             FORALL,
                             b,
                             Formula(
-                                Term(add, {Term(add, {Term(a), Term(b)}), Term(m)}),
-                                Term(add, {Term(a), Term(add, {Term(b), Term(m)})})
+                                Term(add, {Term(add, {a, b}), m}),
+                                Term(add, {a, Term(add, {b, m})})
                                 )
                             )
                         )
@@ -376,8 +376,8 @@ int main() {
                     FORALL,
                     b,
                     Formula(
-                        Term(add, {Term(add, {Term(a), Term(b)}), Term(m)}),
-                        Term(add, {Term(a), Term(add, {Term(b), Term(m)})})
+                        Term(add, {Term(add, {a, b}), m}),
+                        Term(add, {a, Term(add, {b, m})})
                         )
                     )
                 )
